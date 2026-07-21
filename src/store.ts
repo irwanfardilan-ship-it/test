@@ -103,25 +103,6 @@ export const useAppStore = create<AppState>((set, get) => ({
     set({ isInitializing: true });
     
     try {
-      // Check if running inside Telegram WebApp and has initData
-      const tg = (window as any).Telegram?.WebApp;
-      if (tg) {
-        tg.ready();
-        tg.expand();
-        
-        const telegramInitData = tg.initData;
-        if (telegramInitData) {
-          console.log('[Telegram Auth] Found WebApp initData, performing backend login...');
-          try {
-            await get().authenticateTelegram(telegramInitData);
-            set({ isInitializing: false });
-            return;
-          } catch (err) {
-            console.error('[Telegram Auth] Verification failed:', err);
-          }
-        }
-      }
-
       const token = get().token;
 
       // Set axios authorization default header if token exists
