@@ -28,6 +28,7 @@ jobs:
         run: npx vite build
         env:
           VITE_BASE_URL: '/test/' # Sesuaikan dengan nama repository Anda agar aset /assets/ ter-load dengan benar
+          VITE_API_URL: 'https://ais-pre-dxmkezhtwqkm7bbiwvgdnv-268860382066.asia-east1.run.app'
 
       - name: Deploy 🚀
         uses: peaceiris/actions-gh-pages@v3
