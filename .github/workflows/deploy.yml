@@ -28,7 +28,8 @@ jobs:
         run: npx vite build
         env:
           VITE_BASE_URL: '/test/' # Sesuaikan dengan nama repository Anda agar aset /assets/ ter-load dengan benar
-          VITE_API_URL: 'https://ais-pre-dxmkezhtwqkm7bbiwvgdnv-268860382066.asia-east1.run.app'
+          # Masukkan URL Backend produksi Anda (misalnya URL Cloud Run dari AI Studio Deploy) ke dalam GitHub Secrets dengan nama VITE_API_URL
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
       - name: Deploy 🚀
         uses: peaceiris/actions-gh-pages@v3
