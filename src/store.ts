@@ -14,6 +14,7 @@ interface AppState {
   isDarkMode: boolean;
   isInitializing: boolean;
   isTelegramWebApp: boolean;
+  telegramAuthError: string | null;
   alert: { message: string; type: 'success' | 'error' | 'info' } | null;
 
   setAlert: (alert: { message: string; type: 'success' | 'error' | 'info' } | null) => void;
@@ -84,6 +85,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   isDarkMode: (() => { try { return localStorage.getItem('azurlize_theme') !== 'light'; } catch(e) { return true; } })(),
   isInitializing: true,
   isTelegramWebApp: false,
+  telegramAuthError: null,
   alert: null,
 
   setAlert: (alert) => set({ 
@@ -102,7 +104,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   initializeAuth: async () => {
-    set({ isInitializing: true });
+    set({ isInitializing: true, telegramAuthError: null });
     
     try {
       const tg = (window as any).Telegram?.WebApp;
@@ -117,39 +119,33 @@ export const useAppStore = create<AppState>((set, get) => ({
         console.log('[Telegram Auth] Found WebApp initData, performing backend login...');
         try {
           await get().authenticateTelegram(telegramInitData);
-          set({ isInitializing: false });
+          set({ telegramAuthError: null });
           return;
         } catch (err: any) {
           console.error('[Telegram Auth] Verification failed:', err);
-          const errMsg = err.response?.data?.error || err.message || '';
-          if (errMsg.includes('belum terdaftar') || errMsg.includes('not found') || errMsg.includes('tidak ditemukan')) {
-            localStorage.removeItem('azurlize_jwt_token');
-            set({ token: null, user: null, application: null });
-          }
+          const errMsg = err.response?.data?.error || err.message || 'Gagal memverifikasi identitas Telegram.';
+          
+          // Clean storage and session when Telegram verification fails
+          localStorage.removeItem('azurlize_jwt_token');
+          delete axios.defaults.headers.common['Authorization'];
+          set({ 
+            token: null, 
+            user: null, 
+            application: null, 
+            telegramAuthError: errMsg 
+          });
+          return;
         }
       } else {
-        const token = get().token;
-
-        // Set axios authorization default header if token exists
-        if (token) {
-          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        }
-
-        if (token) {
-          try {
-            // Fetch real status
-            const res = await axios.get('/api/me');
-            set({
-              user: res.data.user,
-              application: res.data.application,
-            });
-          } catch (err) {
-            console.warn('Failed auto token verification.', err);
-            // If server request fails or token invalid, clean storage
-            localStorage.removeItem('azurlize_jwt_token');
-            set({ token: null, user: null, application: null });
-          }
-        }
+        // Outside Telegram WebApp: Enforce strict bot access
+        localStorage.removeItem('azurlize_jwt_token');
+        delete axios.defaults.headers.common['Authorization'];
+        set({ 
+          token: null, 
+          user: null, 
+          application: null, 
+          telegramAuthError: 'Aplikasi ini hanya dapat diakses melalui Telegram Bot resmi AzurLize.' 
+        });
       }
     } catch (globalErr) {
       console.error('[Auth Initialization] Critical error:', globalErr);

@@ -39,7 +39,7 @@ export class AuthenticateUserUseCase {
     if (this.botEnabled) {
       const isValid = await this.verifier.verify(initData);
       if (!isValid) {
-        throw new Error('Verifikasi tanda tangan Telegram gagal.');
+        throw new Error('Verifikasi tanda tangan Telegram gagal. Aplikasi ini hanya dapat diakses melalui Bot Resmi (@azurlize_recruitment_bot).');
       }
     }
 

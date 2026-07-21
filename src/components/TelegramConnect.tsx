@@ -9,7 +9,7 @@ import { useAppStore } from '../store';
 import { ShieldAlert, ExternalLink, HelpCircle, UserX, Copy, Check } from 'lucide-react';
 
 export function TelegramConnect() {
-  const { isTelegramWebApp } = useAppStore();
+  const { isTelegramWebApp, telegramAuthError } = useAppStore();
   const [copied, setCopied] = React.useState(false);
 
   // Get WebApp Telegram User info
@@ -31,8 +31,13 @@ ID Telegram: ${tgUser.id}`;
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // State 1: Open outside Telegram WebApp (Direct Browser Block)
-  if (!isTelegramWebApp) {
+  // Check if error is related to signature or unauthorized bot
+  const isUnauthorizedBot = telegramAuthError?.toLowerCase().includes('tanda tangan') || 
+                            telegramAuthError?.toLowerCase().includes('bot resmi') ||
+                            telegramAuthError?.toLowerCase().includes('verifikasi');
+
+  // State 1: Open outside Telegram WebApp OR Opened from an Unauthorized Bot Signature
+  if (!isTelegramWebApp || isUnauthorizedBot) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-brand-dark flex items-center justify-center px-4 py-12 relative overflow-hidden text-slate-900 dark:text-white font-sans transition-colors duration-300">
         <div className="absolute top-1/4 left-1/4 -z-10 h-96 w-96 rounded-full bg-gradient-to-tr from-rose-500 to-amber-500 opacity-10 dark:opacity-15 blur-[120px]"></div>
@@ -52,16 +57,20 @@ ID Telegram: ${tgUser.id}`;
 
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white mt-5">Akses Ditolak</h1>
           <p className="mt-3 text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-sm mx-auto">
-            Portal ini dilindungi secara ketat. Anda hanya dapat menjalankan dan mengakses aplikasi ini dari dalam <strong>Telegram Bot Resmi AzurLize Team</strong>.
+            {isUnauthorizedBot ? (
+              <>Aplikasi ini dibuka melalui <strong>bot lain yang tidak terdaftar</strong>. Akses hanya diizinkan secara eksklusif melalui Telegram Bot Resmi AzurLize Team (<strong>@{botUsername}</strong>).</>
+            ) : (
+              <>Portal ini dilindungi secara ketat. Anda hanya dapat menjalankan dan mengakses aplikasi ini dari dalam <strong>Telegram Bot Resmi AzurLize Team (@{botUsername})</strong>.</>
+            )}
           </p>
 
           <div className="mt-6 p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/20 text-xs text-rose-700 dark:text-rose-300 text-left space-y-2">
             <p className="font-semibold flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-rose-500"></span>
-              Mengapa akses dibatalkan?
+              Penyebab Kegagalan Akses:
             </p>
             <p className="leading-relaxed text-[11px] opacity-90">
-              Demi keamanan, otentikasi data dan penyerahan aplikasi rekrutmen wajib diverifikasi secara langsung menggunakan infrastruktur Telegram WebApp yang aman.
+              {telegramAuthError || 'Otentikasi Telegram WebApp wajib terverifikasi menggunakan kunci token bot resmi AzurLize Team.'}
             </p>
           </div>
 
@@ -73,13 +82,13 @@ ID Telegram: ${tgUser.id}`;
               rel="noopener noreferrer"
               className="w-full py-3.5 px-4 bg-gradient-to-r from-rose-600 to-red-500 hover:opacity-95 text-white text-xs font-bold rounded-xl transition-all shadow-md shadow-rose-600/10 flex items-center justify-center gap-2 cursor-pointer"
             >
-              <span>Buka Telegram Bot</span>
+              <span>Buka Bot Resmi (@{botUsername})</span>
               <ExternalLink className="h-3.5 w-3.5" />
             </a>
           </div>
 
           <div className="mt-6 pt-5 border-t border-slate-200 dark:border-white/5 flex items-center justify-center gap-1.5 text-[9px] font-mono text-slate-400 dark:text-slate-500">
-            <span>SECURE_GATEWAY_ENFORCED_SSL</span>
+            <span>UNAUTHORIZED_BOT_SIGNATURE_BLOCKED</span>
           </div>
         </motion.div>
       </div>
