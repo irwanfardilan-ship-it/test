@@ -31,34 +31,47 @@ function sanitizeErrorMessage(msg: string): string {
   let cleanMsg = msg;
   
   // 1. Remove standard URLs starting with http:// or https://
-  const urlRegex = /(https?:\/\/[^\s]+)/gi;
-  cleanMsg = cleanMsg.replace(urlRegex, '');
+  const urlRegex = /(https?:\/\/[^\s"'()<>]+)/gi;
+  cleanMsg = cleanMsg.replace(urlRegex, '[tersembunyi]');
   
   // 2. Remove standard URLs starting with www.
-  const wwwRegex = /(www\.[^\s]+)/gi;
-  cleanMsg = cleanMsg.replace(wwwRegex, '');
+  const wwwRegex = /(www\.[^\s"'()<>]+)/gi;
+  cleanMsg = cleanMsg.replace(wwwRegex, '[tersembunyi]');
   
-  // 3. Remove hostname suffix patterns like Cloud Run (.run.app) or common domains (.com, .net, etc.)
-  const domainRegex = /([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?::\d+)?/gi;
-  cleanMsg = cleanMsg.replace(domainRegex, 'sistem');
-  
-  // 4. Remove any remaining IP address structures
-  const ipRegex = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/g;
-  cleanMsg = cleanMsg.replace(ipRegex, 'sistem');
-  
-  // 5. Remove localhost or similar development terms
-  const localhostRegex = /\b(localhost|127\.0\.0\.1)\b/gi;
-  cleanMsg = cleanMsg.replace(localhostRegex, 'sistem');
+  // 3. Remove email addresses
+  const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g;
+  cleanMsg = cleanMsg.replace(emailRegex, '[tersembunyi]');
 
-  // 6. Remove remaining ports (like :3000)
+  // 4. Remove username/repository pattern like "irwanfardilan-ship-it/test" or "some-user/repo"
+  const repoPathRegex = /\b[a-zA-Z0-9._-]+\/[a-zA-Z0-9._-]+(\.git)?\b/g;
+  cleanMsg = cleanMsg.replace(repoPathRegex, '[sistem]');
+
+  // 5. Remove absolute file paths like /usr/bin/git
+  const filePathRegex = /\b\/[a-zA-Z0-9._-]+(\/[a-zA-Z0-9._-]+)+\b/g;
+  cleanMsg = cleanMsg.replace(filePathRegex, '[sistem]');
+
+  // 6. Remove sensitive hostnames/domains/IPs/ports
+  const domainRegex = /\b([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?::\d+)?\b/gi;
+  cleanMsg = cleanMsg.replace(domainRegex, '[sistem]');
+  
+  const ipRegex = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/g;
+  cleanMsg = cleanMsg.replace(ipRegex, '[sistem]');
+  
+  const localhostRegex = /\b(localhost|127\.0\.0\.1)\b/gi;
+  cleanMsg = cleanMsg.replace(localhostRegex, '[sistem]');
+
   const portRegex = /:\d+/g;
   cleanMsg = cleanMsg.replace(portRegex, '');
 
-  // 7. Remove API paths
-  const apiPathRegex = /\/api\/[^\s]+/gi;
-  cleanMsg = cleanMsg.replace(apiPathRegex, 'sistem');
-  
-  // 8. Clean up extra spacing
+  // 7. Remove specific git/github/deployment/action related terms or username patterns
+  const sensitiveWordsRegex = /\b[a-zA-Z0-9_-]*(github|git|run\.app|ais-dev|irwanfardilan|ship-it)[a-zA-Z0-9_-]*\b/gi;
+  cleanMsg = cleanMsg.replace(sensitiveWordsRegex, '[sistem]');
+
+  // 8. Remove API paths
+  const apiPathRegex = /\/api\/[^\s"'()<>]+/gi;
+  cleanMsg = cleanMsg.replace(apiPathRegex, '[sistem]');
+
+  // 9. Clean up extra spacing
   cleanMsg = cleanMsg.replace(/\s+/g, ' ');
   return cleanMsg.trim();
 }
