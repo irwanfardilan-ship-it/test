@@ -16,6 +16,8 @@ import { DashboardView } from './pages/DashboardView';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Terminal, LogOut, CheckCircle, AlertTriangle, Info, Send, ShieldAlert, ArrowRight, ExternalLink } from 'lucide-react';
 import { ThemeProvider } from './components/design-system/ThemeProvider';
+import { isDirectFirebaseMode } from './lib/axiosInterceptor';
+
 
 export default function App() {
   const { 
@@ -174,6 +176,12 @@ export default function App() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Connection status indicator */}
+        <div className="fixed bottom-3 left-3 z-50 flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-900/90 dark:bg-black/80 backdrop-blur-md rounded-full border border-white/10 text-[9px] font-semibold text-slate-300 pointer-events-none select-none shadow-lg">
+          <span className={`h-1.5 w-1.5 rounded-full ${isDirectFirebaseMode() ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]' : 'bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(34,211,238,0.6)]'}`}></span>
+          <span className="tracking-wide">{isDirectFirebaseMode() ? 'Direct Firebase Mode (GitHub Pages)' : 'API Mode (Custom Server)'}</span>
+        </div>
       </div>
     </ThemeProvider>
   );
