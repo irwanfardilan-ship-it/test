@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // -------------------------------------------------------------------------
+    // IMPORTANT SECURITY NOTE:
+    // This application uses a custom Node.js backend to interact with Firestore,
+    // and custom Telegram Authentication instead of Firebase Auth.
+    // 
+    // In this preview environment, the backend uses the Client Web SDK, which 
+    // requires these rules to be open to function.
+    //
+    // FOR PRODUCTION DEPLOYMENT:
+    // 1. Configure the backend to use the 'firebase-admin' SDK with a Service Account.
+    // 2. Change the rule below to 'allow read, write: if false;' to completely 
+    //    lock down the database from external client access.
+    // -------------------------------------------------------------------------
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

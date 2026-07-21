@@ -1,0 +1,385 @@
+{
+  "users": {
+    "111111": {
+      "telegramId": "111111",
+      "username": "super_admin_azurlize",
+      "firstName": "Alex",
+      "lastName": "Wicaksono",
+      "photoUrl": "",
+      "role": "Super Admin",
+      "status": "Active",
+      "createdAt": "2026-06-21T07:35:01.537Z",
+      "updatedAt": "2026-07-21T08:19:51.145Z",
+      "reason": "Audit rutin"
+    },
+    "222222": {
+      "telegramId": "222222",
+      "username": "sarah_recruiter",
+      "firstName": "Sarah",
+      "lastName": "Amelia",
+      "photoUrl": "",
+      "role": "Recruiter",
+      "status": "Active",
+      "createdAt": "2026-06-26T07:35:01.537Z",
+      "updatedAt": "2026-07-21T08:10:00.817Z"
+    },
+    "333333": {
+      "telegramId": "333333",
+      "username": "andri_dev",
+      "firstName": "Andri",
+      "lastName": "Pratama",
+      "photoUrl": "",
+      "role": "Member",
+      "status": "Active",
+      "createdAt": "2026-07-06T07:35:01.537Z",
+      "updatedAt": "2026-07-21T08:17:23.703Z"
+    },
+    "444444": {
+      "telegramId": "444444",
+      "username": "budi_pending",
+      "firstName": "Budi",
+      "lastName": "Santoso",
+      "photoUrl": "",
+      "role": "Member",
+      "status": "Pending",
+      "createdAt": "2026-07-19T07:35:01.537Z",
+      "updatedAt": "2026-07-21T08:18:45.493Z"
+    },
+    "555555": {
+      "telegramId": "555555",
+      "username": "citra_rejected",
+      "firstName": "Citra",
+      "lastName": "Lestari",
+      "photoUrl": "",
+      "role": "Member",
+      "status": "Active",
+      "createdAt": "2026-07-11T07:35:01.537Z",
+      "updatedAt": "2026-07-21T08:01:42.293Z",
+      "reason": "Kualifikasi portofolio belum sesuai dengan kebutuhan teknis tim saat ini."
+    },
+    "666666": {
+      "telegramId": "666666",
+      "username": "dimas_banned",
+      "firstName": "Dimas",
+      "lastName": "Wijaya",
+      "photoUrl": "",
+      "role": "Member",
+      "status": "Active",
+      "createdAt": "2026-06-11T07:35:01.537Z",
+      "updatedAt": "2026-07-21T08:01:30.406Z",
+      "reason": "Melanggar kode etik tim dengan menyebarkan data internal tanpa izin."
+    },
+    "888888": {
+      "telegramId": "888888",
+      "username": "new_guest",
+      "firstName": "Ferry",
+      "lastName": "Kurniawan",
+      "photoUrl": "",
+      "role": "Member",
+      "status": "Pending",
+      "createdAt": "2026-07-21T07:36:47.737Z",
+      "updatedAt": "2026-07-21T08:32:57.332Z"
+    },
+    "40517323": {
+      "createdAt": "2026-07-21T12:03:22.322Z",
+      "firstName": "TestReg",
+      "lastName": "",
+      "photoUrl": "",
+      "role": "Member",
+      "status": "Pending",
+      "telegramId": "40517323",
+      "updatedAt": "2026-07-21T12:03:22.322Z",
+      "username": "testregister"
+    },
+    "188500142": {
+      "telegramId": "188500142",
+      "username": "lizvius",
+      "firstName": "AzurLize",
+      "lastName": "",
+      "photoUrl": "",
+      "role": "Member",
+      "status": "Pending",
+      "createdAt": "2026-07-21T08:59:37.400Z",
+      "updatedAt": "2026-07-21T09:50:50.094Z"
+    },
+    "8345450670": {
+      "lastName": "",
+      "status": "Pending",
+      "username": "lizvius",
+      "telegramId": "8345450670",
+      "updatedAt": "2026-07-21T12:00:24.984Z",
+      "photoUrl": "https://t.me/i/userpic/320/HrheqMaBGOCneZ1Y0FcwIWuuhQcDLKfHps-hXbg1mYL0feVIFQLZolUwFZWqxsly.svg",
+      "createdAt": "2026-07-21T12:00:24.984Z",
+      "role": "Super Admin",
+      "firstName": "azurLize"
+    }
+  },
+  "applications": {
+    "app-1": {
+      "id": "app-1",
+      "telegramId": "444444",
+      "fullName": "Budi Santoso",
+      "email": "budi.santoso@gmail.com",
+      "phone": "+6281234567890",
+      "position": "Frontend Developer (React)",
+      "experience": "2 years",
+      "portfolioUrl": "https://budiportfolio.dev",
+      "githubUrl": "https://github.com/budisantoso",
+      "skills": [
+        "React",
+        "TypeScript",
+        "TailwindCSS",
+        "Redux"
+      ],
+      "stage": "Screening",
+      "appliedAt": "2026-07-19T07:35:01.537Z",
+      "updatedAt": "2026-07-20T07:35:01.537Z",
+      "notes": "Lolos screening awal dokumen. Berkas portofolio terlihat rapi dan relevan.",
+      "interviewerRating": 4
+    },
+    "app-2": {
+      "id": "app-2",
+      "telegramId": "555555",
+      "fullName": "Citra Lestari",
+      "email": "citra.lestari@gmail.com",
+      "phone": "+6281299998888",
+      "position": "UI/UX Designer",
+      "experience": "1 year",
+      "portfolioUrl": "https://behance.net/citralestari",
+      "githubUrl": "",
+      "skills": [
+        "Figma",
+        "Prototyping",
+        "User Research",
+        "Adobe XD"
+      ],
+      "stage": "Rejected",
+      "appliedAt": "2026-07-11T07:35:01.537Z",
+      "updatedAt": "2026-07-13T07:35:01.537Z",
+      "notes": "Karya portofolio UI masih terlalu dasar, belum menguasai auto-layout Figma.",
+      "interviewerRating": 2
+    },
+    "app-3": {
+      "id": "app-3",
+      "telegramId": "333333",
+      "fullName": "Andri Pratama",
+      "email": "andri.pratama@gmail.com",
+      "phone": "+6281355554444",
+      "position": "Backend Developer (NodeJS)",
+      "experience": "3.5 years",
+      "portfolioUrl": "https://andripratama.io",
+      "githubUrl": "https://github.com/andripratama",
+      "skills": [
+        "NodeJS",
+        "Express",
+        "PostgreSQL",
+        "Docker",
+        "Redis"
+      ],
+      "stage": "Approved",
+      "appliedAt": "2026-07-06T07:35:01.537Z",
+      "updatedAt": "2026-07-21T07:41:04.841Z",
+      "notes": "Sangat kuat dalam mendesain arsitektur database dan caching. Rekomendasi tinggi.",
+      "interviewerRating": 5,
+      "interviewerId": "222222",
+      "interviewerName": "Sarah Amelia"
+    },
+    "app-4": {
+      "id": "app-4",
+      "telegramId": "999101",
+      "fullName": "Eko Wijaya",
+      "email": "eko.wijaya@gmail.com",
+      "phone": "+6281122223333",
+      "position": "Fullstack Engineer",
+      "experience": "5 years",
+      "portfolioUrl": "https://ekowijaya.dev",
+      "githubUrl": "https://github.com/ekowijaya",
+      "skills": [
+        "React",
+        "NodeJS",
+        "GraphQL",
+        "AWS",
+        "NextJS"
+      ],
+      "stage": "Technical Test",
+      "appliedAt": "2026-07-17T07:35:01.537Z",
+      "updatedAt": "2026-07-21T08:06:48.287Z",
+      "notes": "Sedang mengerjakan tes teknis pembuatan API gateway sederhana.",
+      "interviewerRating": 4,
+      "interviewerId": "111111",
+      "interviewerName": "Alex Wicaksono"
+    },
+    "app-5": {
+      "id": "app-5",
+      "telegramId": "999102",
+      "fullName": "Fanny Rahma",
+      "email": "fanny.rahma@gmail.com",
+      "phone": "+6281244443333",
+      "position": "QA Engineer",
+      "experience": "2 years",
+      "portfolioUrl": "",
+      "githubUrl": "https://github.com/fannyqa",
+      "skills": [
+        "Cypress",
+        "Selenium",
+        "Postman",
+        "Javascript"
+      ],
+      "stage": "Interview",
+      "appliedAt": "2026-07-18T07:35:01.537Z",
+      "updatedAt": "2026-07-21T07:35:01.537Z",
+      "notes": "Interview dijadwalkan hari ini pukul 14:00 WIB via Telegram Video Call.",
+      "interviewerRating": 3
+    },
+    "app-1784627450093": {
+      "id": "app-1784627450093",
+      "telegramId": "188500142",
+      "fullName": "AzurLize",
+      "email": "ghrryuuka@gmail.com",
+      "phone": "+62444444444",
+      "position": "Recruiter",
+      "experience": "Not specified",
+      "portfolioUrl": "",
+      "githubUrl": "",
+      "skills": [],
+      "stage": "Screening",
+      "appliedAt": "2026-07-21T09:50:50.093Z",
+      "updatedAt": "2026-07-21T09:50:50.093Z",
+      "notes": "UID 9kucing: 4444444444"
+    }
+  },
+  "announcements": [
+    {
+      "id": "ann-1",
+      "title": "Selamat Datang di AzurLize Recruitment Platform!",
+      "content": "Halo Rekan-rekan AzurLize Team. Platform rekrutmen internal versi baru kini telah resmi dirilis. Anda dapat memantau pendaftar secara langsung via Telegram Mini App.",
+      "category": "System",
+      "author": "Alex Wicaksono",
+      "date": "16/7/2026",
+      "important": true
+    },
+    {
+      "id": "ann-2",
+      "title": "Target Rekrutmen Kuartal 3",
+      "content": "Kita membutuhkan 3 orang Senior Frontend Developer (React) tambahan dan 2 Backend Developer sebelum akhir bulan depan untuk mendukung peluncuran modul client panel terbaru.",
+      "category": "Recruitment",
+      "author": "Alex Wicaksono",
+      "date": "19/7/2026",
+      "important": false
+    }
+  ],
+  "logs": [
+    {
+      "userId": "188500142",
+      "userName": "AzurLize",
+      "userRole": "Member",
+      "action": "Mengajukan lamaran baru untuk posisi Recruiter",
+      "targetId": "app-1784627450093",
+      "targetName": "AzurLize",
+      "id": "log-1784627450095",
+      "timestamp": "2026-07-21T09:50:50.095Z"
+    },
+    {
+      "userId": "111111",
+      "userName": "Alex Wicaksono",
+      "userRole": "Super Admin",
+      "action": "Memperbarui tahap lamaran Eko Wijaya menjadi Technical Test",
+      "targetId": "app-4",
+      "targetName": "Eko Wijaya",
+      "id": "log-1784621208287",
+      "timestamp": "2026-07-21T08:06:48.287Z"
+    },
+    {
+      "userId": "111111",
+      "userName": "Alex Wicaksono",
+      "userRole": "Super Admin",
+      "action": "Mengubah status Ferry menjadi Active",
+      "targetId": "888888",
+      "targetName": "Ferry",
+      "id": "log-1784620905273",
+      "timestamp": "2026-07-21T08:01:45.273Z"
+    },
+    {
+      "userId": "111111",
+      "userName": "Alex Wicaksono",
+      "userRole": "Super Admin",
+      "action": "Mengubah status Citra menjadi Active",
+      "targetId": "555555",
+      "targetName": "Citra",
+      "id": "log-1784620902293",
+      "timestamp": "2026-07-21T08:01:42.293Z"
+    },
+    {
+      "userId": "111111",
+      "userName": "Alex Wicaksono",
+      "userRole": "Super Admin",
+      "action": "Mengubah status Budi menjadi Active",
+      "targetId": "444444",
+      "targetName": "Budi",
+      "id": "log-1784620898327",
+      "timestamp": "2026-07-21T08:01:38.327Z"
+    },
+    {
+      "userId": "111111",
+      "userName": "Alex Wicaksono",
+      "userRole": "Super Admin",
+      "action": "Mengubah status Dimas menjadi Active",
+      "targetId": "666666",
+      "targetName": "Dimas",
+      "id": "log-1784620890407",
+      "timestamp": "2026-07-21T08:01:30.407Z"
+    },
+    {
+      "userId": "111111",
+      "userName": "Alex Wicaksono",
+      "userRole": "Super Admin",
+      "action": "Mengubah status Alex menjadi Suspended",
+      "targetId": "111111",
+      "targetName": "Alex",
+      "id": "log-1784620392453",
+      "timestamp": "2026-07-21T07:53:12.453Z"
+    },
+    {
+      "userId": "222222",
+      "userName": "Sarah Amelia",
+      "userRole": "Recruiter",
+      "action": "Memperbarui tahap lamaran Andri Pratama menjadi Approved",
+      "targetId": "app-3",
+      "targetName": "Andri Pratama",
+      "id": "log-1784619664841",
+      "timestamp": "2026-07-21T07:41:04.841Z"
+    },
+    {
+      "id": "log-1",
+      "userId": "111111",
+      "userName": "Alex Wicaksono",
+      "userRole": "Super Admin",
+      "action": "Mengubah peran pengguna Sarah Amelia menjadi Recruiter",
+      "targetId": "222222",
+      "targetName": "Sarah Amelia",
+      "timestamp": "2026-07-01T07:35:01.556Z"
+    },
+    {
+      "id": "log-2",
+      "userId": "222222",
+      "userName": "Sarah Amelia",
+      "userRole": "Recruiter",
+      "action": "Mengubah status pendaftaran Andri Pratama menjadi Approved",
+      "targetId": "app-3",
+      "targetName": "Andri Pratama",
+      "timestamp": "2026-07-09T07:35:01.556Z"
+    },
+    {
+      "id": "log-3",
+      "userId": "111111",
+      "userName": "Alex Wicaksono",
+      "userRole": "Super Admin",
+      "action": "Membuat pengumuman \"Target Rekrutmen Kuartal 3\"",
+      "timestamp": "2026-07-19T07:35:01.556Z"
+    }
+  ],
+  "settings": {
+    "weeklyTarget": 5,
+    "monthlyTarget": 20
+  }
+}

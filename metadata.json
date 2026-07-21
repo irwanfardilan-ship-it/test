@@ -1,0 +1,8 @@
+{
+  "name": "AzurLize Team",
+  "description": "Enterprise Telegram Mini Web App Recruitment and Onboarding Management System for AzurLize Team.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

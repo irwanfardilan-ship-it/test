@@ -1,0 +1,94 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User account synchronized from Telegram Mini App details.",
+      "type": "object",
+      "properties": {
+        "telegramId": { "type": "string" },
+        "username": { "type": "string" },
+        "firstName": { "type": "string" },
+        "lastName": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "role": { "type": "string", "enum": ["Super Admin", "Admin", "Recruiter", "Member"] },
+        "status": { "type": "string", "enum": ["Active", "Pending", "Rejected", "Suspended", "Banned"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "reason": { "type": "string" }
+      },
+      "required": ["telegramId", "firstName", "role", "status", "createdAt", "updatedAt"]
+    },
+    "Application": {
+      "title": "Application",
+      "description": "Recruitment application form details submitted by a user.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "telegramId": { "type": "string" },
+        "fullName": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "position": { "type": "string" },
+        "experience": { "type": "string" },
+        "portfolioUrl": { "type": "string" },
+        "githubUrl": { "type": "string" },
+        "skills": { "type": "array" },
+        "stage": { "type": "string", "enum": ["Screening", "Technical Test", "Interview", "Final Review", "Approved", "Rejected"] },
+        "appliedAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "notes": { "type": "string" },
+        "interviewerRating": { "type": "integer" },
+        "interviewerId": { "type": "string" },
+        "interviewerName": { "type": "string" }
+      },
+      "required": ["id", "telegramId", "fullName", "email", "phone", "position", "experience", "stage", "appliedAt", "updatedAt"]
+    },
+    "ActivityLog": {
+      "title": "Activity Log",
+      "description": "System activity logs",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userRole": { "type": "string" },
+        "action": { "type": "string" },
+        "targetId": { "type": "string" },
+        "targetName": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Announcement": {
+      "title": "Announcement",
+      "description": "System announcements",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "category": { "type": "string" },
+        "author": { "type": "string" },
+        "date": { "type": "string" },
+        "important": { "type": "boolean" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Collection storing application user identities and permission contexts."
+    },
+    "/applications/{applicationId}": {
+      "schema": "Application",
+      "description": "Collection storing candidate applications."
+    },
+    "/logs/{logId}": {
+      "schema": "ActivityLog",
+      "description": "Collection storing system activity logs."
+    },
+    "/announcements/{announcementId}": {
+      "schema": "Announcement",
+      "description": "Collection storing system announcements."
+    }
+  }
+}
