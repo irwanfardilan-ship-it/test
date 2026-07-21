@@ -2,35 +2,37 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main # Jalankan otomatis saat push ke branch main
-
-permissions:
-  contents: write # Wajib untuk memberikan izin menulis ke branch gh-pages (mencegah error 403)
+    branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
-    concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 🛎️
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js ⚙️
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 24
-          cache: 'npm'
+          node-version: '22'
 
-      - name: Install Dependencies 📦
+      - name: Install dependencies
         run: npm install
 
-      - name: Build Frontend 🏗️
-        run: npx vite build
+      - name: Build
+        run: npm run build:static
         env:
-          VITE_BASE_URL: '/test/' # Sesuaikan dengan nama repository Anda agar aset /assets/ ter-load dengan benar
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+          VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
-      - name: Deploy 🚀
+      - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
