@@ -13,6 +13,7 @@ interface AppState {
   token: string | null;
   isDarkMode: boolean;
   isInitializing: boolean;
+  isTelegramWebApp: boolean;
   alert: { message: string; type: 'success' | 'error' | 'info' } | null;
 
   setAlert: (alert: { message: string; type: 'success' | 'error' | 'info' } | null) => void;
@@ -82,6 +83,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   token: (() => { try { return localStorage.getItem('azurlize_jwt_token'); } catch(e) { return null; } })(),
   isDarkMode: (() => { try { return localStorage.getItem('azurlize_theme') !== 'light'; } catch(e) { return true; } })(),
   isInitializing: true,
+  isTelegramWebApp: false,
   alert: null,
 
   setAlert: (alert) => set({ 
@@ -103,26 +105,50 @@ export const useAppStore = create<AppState>((set, get) => ({
     set({ isInitializing: true });
     
     try {
-      const token = get().token;
+      const tg = (window as any).Telegram?.WebApp;
+      const isTg = !!(tg && tg.initData);
+      set({ isTelegramWebApp: isTg });
 
-      // Set axios authorization default header if token exists
-      if (token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      }
-
-      if (token) {
+      if (isTg) {
+        tg.ready();
+        tg.expand();
+        const telegramInitData = tg.initData;
+        
+        console.log('[Telegram Auth] Found WebApp initData, performing backend login...');
         try {
-          // Fetch real status
-          const res = await axios.get('/api/me');
-          set({
-            user: res.data.user,
-            application: res.data.application,
-          });
-        } catch (err) {
-          console.warn('Failed auto token verification.', err);
-          // If server request fails or token invalid, clean storage
-          localStorage.removeItem('azurlize_jwt_token');
-          set({ token: null, user: null, application: null });
+          await get().authenticateTelegram(telegramInitData);
+          set({ isInitializing: false });
+          return;
+        } catch (err: any) {
+          console.error('[Telegram Auth] Verification failed:', err);
+          const errMsg = err.response?.data?.error || err.message || '';
+          if (errMsg.includes('belum terdaftar') || errMsg.includes('not found') || errMsg.includes('tidak ditemukan')) {
+            localStorage.removeItem('azurlize_jwt_token');
+            set({ token: null, user: null, application: null });
+          }
+        }
+      } else {
+        const token = get().token;
+
+        // Set axios authorization default header if token exists
+        if (token) {
+          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        }
+
+        if (token) {
+          try {
+            // Fetch real status
+            const res = await axios.get('/api/me');
+            set({
+              user: res.data.user,
+              application: res.data.application,
+            });
+          } catch (err) {
+            console.warn('Failed auto token verification.', err);
+            // If server request fails or token invalid, clean storage
+            localStorage.removeItem('azurlize_jwt_token');
+            set({ token: null, user: null, application: null });
+          }
         }
       }
     } catch (globalErr) {

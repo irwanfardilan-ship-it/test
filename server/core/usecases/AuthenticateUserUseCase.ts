@@ -43,24 +43,11 @@ export class AuthenticateUserUseCase {
       }
     }
 
-    // Get or create user
+    // Check if user already exists in database
     let userEntity = await this.userRepo.getById(telegramId);
     
     if (!userEntity) {
-      // Create new member
-      const newUser: User = {
-        telegramId,
-        username: tgUser.username || `user_${telegramId}`,
-        firstName: tgUser.first_name || 'User',
-        lastName: tgUser.last_name || '',
-        photoUrl: tgUser.photo_url || '',
-        role: 'Member',
-        status: 'Pending',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-      userEntity = new UserEntity(newUser);
-      await this.userRepo.save(userEntity);
+      throw new Error('Akun Telegram Anda belum terdaftar di database. Silakan hubungi Administrator untuk mendaftarkan akun Anda.');
     } else {
       // Update existing user details from Telegram WebApp
       const user = userEntity.toJSON();
