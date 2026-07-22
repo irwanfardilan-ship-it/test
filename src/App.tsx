@@ -12,6 +12,7 @@ import { PendingView } from './components/PendingView';
 import { BannedView } from './components/BannedView';
 import { RejectedView } from './components/RejectedView';
 import { SuspendedView } from './components/SuspendedView';
+import { MemberDataForm } from './components/MemberDataForm';
 import { DashboardView } from './pages/DashboardView';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Terminal, LogOut, CheckCircle, AlertTriangle, Info, Send, ShieldAlert, ArrowRight, ExternalLink } from 'lucide-react';
@@ -83,6 +84,9 @@ export default function App() {
 
     switch (user.status) {
       case 'Active':
+        if (!user.uidKucing || !user.email || !user.noWa) {
+          return <MemberDataForm />;
+        }
         return <DashboardView />;
         
       case 'Pending':

@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import 'dotenv/config';
 import express, { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import crypto from 'crypto';
@@ -22,7 +23,7 @@ import { FirestoreUserRepository } from './server/infrastructure/database/Firest
 import { TelegramSecurityService } from './server/infrastructure/security/TelegramSecurityService';
 import { JwtTokenProvider } from './server/infrastructure/security/JwtTokenProvider';
 import { AuthenticateUserUseCase } from './server/core/usecases/AuthenticateUserUseCase';
-import { ConnectTelegramManualUseCase } from './server/core/usecases/ConnectTelegramManualUseCase';
+
 import { AuthController as CleanAuthController } from './server/presentation/controllers/AuthController';
 
 const app = express();
@@ -43,17 +44,13 @@ const cleanAuthenticateUseCase = new AuthenticateUserUseCase(
   cleanJwtService,
   !!BOT_TOKEN
 );
-const cleanConnectManualUseCase = new ConnectTelegramManualUseCase(
-  cleanUserRepository,
-  cleanJwtService
-);
 const firestoreAppRepo = new FirestoreApplicationRepository();
 const firestoreLogRepo = new FirestoreLogRepository();
 const firestoreAnnRepo = new FirestoreAnnouncementRepository();
 
 const cleanAuthController = new CleanAuthController(
   cleanAuthenticateUseCase,
-  cleanConnectManualUseCase
+  
 );
 
 // Middlewares
@@ -148,7 +145,6 @@ function requireRoles(roles: UserRole[]) {
 
 /// API ROUTE: Telegram Authentication
 app.post('/api/auth/telegram', cleanAuthController.handleTelegramAuth);
-app.post('/api/auth/telegram-manual', cleanAuthController.handleTelegramManual);
 
 // API ROUTE: Get Profile
 app.get('/api/me', authenticateToken, async (req: AuthRequest, res: Response): Promise<void> => {
@@ -173,6 +169,66 @@ app.get('/api/me', authenticateToken, async (req: AuthRequest, res: Response): P
 });
 
 // API ROUTE: Submit Recruitment Application (Self Register)
+// Route for Member Data Form
+app.post('/api/user/data', authenticateToken, async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const telegramId = req.user?.telegramId;
+    if (!telegramId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const { uidKucing, email, noWa } = req.body;
+    
+    // Check missing fields
+    if (!uidKucing || !email || !noWa) {
+      res.status(400).json({ error: 'UID Kucing, Email, and No WA are required' });
+      return;
+    }
+
+    const userEntity = await cleanUserRepo.getById(telegramId);
+    if (!userEntity) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    const userData = userEntity.toJSON();
+    userData.uidKucing = String(uidKucing);
+    userData.email = String(email);
+    userData.noWa = String(noWa);
+    userData.updatedAt = new Date().toISOString();
+
+    await db.saveUser(userData);
+
+    res.json({ message: 'User data updated successfully' });
+  } catch (err: any) {
+    console.error('Error updating user data:', err);
+    res.status(500).json({ error: err.message || 'Internal Server Error' });
+  }
+});
+
+// GET /api/auth/me (to refresh user state on client after they save form)
+app.get('/api/auth/me', authenticateToken, async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const telegramId = req.user?.telegramId;
+    if (!telegramId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const userEntity = await cleanUserRepo.getById(telegramId);
+    if (!userEntity) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    res.json({ user: userEntity.toJSON() });
+  } catch (err: any) {
+    console.error('Error fetching me:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 app.post('/api/register', authenticateToken, async (req: AuthRequest, res: Response): Promise<void> => {
   if (!req.user) {
     res.status(401).json({ error: 'Tidak diotorisasi.' });

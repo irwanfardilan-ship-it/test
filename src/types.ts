@@ -26,6 +26,9 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   reason?: string; // Reason for blocked, suspended, rejected
+  uidKucing?: string;
+  email?: string;
+  noWa?: string;
 }
 
 export type RecruitmentStage = 

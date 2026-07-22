@@ -5,7 +5,7 @@
 
 import { create } from 'zustand';
 import axios from 'axios';
-import { User, Application, UserRole, UserStatus } from './types';
+import { User, Application } from './types';
 
 interface AppState {
   user: User | null;
@@ -22,58 +22,35 @@ interface AppState {
   setTheme: (dark: boolean) => void;
   initializeAuth: () => Promise<void>;
   authenticateTelegram: (initData: string) => Promise<void>;
-  connectTelegramManual: (username: string, firstName: string, lastName?: string) => Promise<void>;
   logout: () => void;
   refreshUserData: () => Promise<void>;
 }
 
 function sanitizeErrorMessage(msg: string): string {
   if (!msg) return msg;
-  
   let cleanMsg = msg;
-  
-  // 1. Remove standard URLs starting with http:// or https://
   const urlRegex = /(https?:\/\/[^\s"'()<>]+)/gi;
   cleanMsg = cleanMsg.replace(urlRegex, '[tersembunyi]');
-  
-  // 2. Remove standard URLs starting with www.
   const wwwRegex = /(www\.[^\s"'()<>]+)/gi;
   cleanMsg = cleanMsg.replace(wwwRegex, '[tersembunyi]');
-  
-  // 3. Remove email addresses
   const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g;
   cleanMsg = cleanMsg.replace(emailRegex, '[tersembunyi]');
-
-  // 4. Remove username/repository pattern like "irwanfardilan-ship-it/test" or "some-user/repo"
   const repoPathRegex = /\b[a-zA-Z0-9._-]+\/[a-zA-Z0-9._-]+(\.git)?\b/g;
   cleanMsg = cleanMsg.replace(repoPathRegex, '[sistem]');
-
-  // 5. Remove absolute file paths like /usr/bin/git
   const filePathRegex = /\b\/[a-zA-Z0-9._-]+(\/[a-zA-Z0-9._-]+)+\b/g;
   cleanMsg = cleanMsg.replace(filePathRegex, '[sistem]');
-
-  // 6. Remove sensitive hostnames/domains/IPs/ports
   const domainRegex = /\b([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?::\d+)?\b/gi;
   cleanMsg = cleanMsg.replace(domainRegex, '[sistem]');
-  
   const ipRegex = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/g;
   cleanMsg = cleanMsg.replace(ipRegex, '[sistem]');
-  
   const localhostRegex = /\b(localhost|127\.0\.0\.1)\b/gi;
   cleanMsg = cleanMsg.replace(localhostRegex, '[sistem]');
-
   const portRegex = /:\d+/g;
   cleanMsg = cleanMsg.replace(portRegex, '');
-
-  // 7. Remove specific git/github/deployment/action related terms or username patterns
   const sensitiveWordsRegex = /\b[a-zA-Z0-9_-]*(github|git|run\.app|ais-dev|irwanfardilan|ship-it)[a-zA-Z0-9_-]*\b/gi;
   cleanMsg = cleanMsg.replace(sensitiveWordsRegex, '[sistem]');
-
-  // 8. Remove API paths
   const apiPathRegex = /\/api\/[^\s"'()<>]+/gi;
   cleanMsg = cleanMsg.replace(apiPathRegex, '[sistem]');
-
-  // 9. Clean up extra spacing
   cleanMsg = cleanMsg.replace(/\s+/g, ' ');
   return cleanMsg.trim();
 }
@@ -81,8 +58,8 @@ function sanitizeErrorMessage(msg: string): string {
 export const useAppStore = create<AppState>((set, get) => ({
   user: null,
   application: null,
-  token: (() => { try { return localStorage.getItem('azurlize_jwt_token'); } catch(e) { return null; } })(),
-  isDarkMode: (() => { try { return localStorage.getItem('azurlize_theme') !== 'light'; } catch(e) { return true; } })(),
+  token: null,
+  isDarkMode: true,
   isInitializing: true,
   isTelegramWebApp: false,
   telegramAuthError: null,
@@ -94,12 +71,10 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   toggleTheme: () => {
     const nextDark = !get().isDarkMode;
-    localStorage.setItem('azurlize_theme', nextDark ? 'dark' : 'light');
     set({ isDarkMode: nextDark });
   },
 
   setTheme: (dark) => {
-    localStorage.setItem('azurlize_theme', dark ? 'dark' : 'light');
     set({ isDarkMode: dark });
   },
 
@@ -126,7 +101,6 @@ export const useAppStore = create<AppState>((set, get) => ({
           const errMsg = err.response?.data?.error || err.message || 'Gagal memverifikasi identitas Telegram.';
           
           // Clean storage and session when Telegram verification fails
-          localStorage.removeItem('azurlize_jwt_token');
           delete axios.defaults.headers.common['Authorization'];
           set({ 
             token: null, 
@@ -138,7 +112,6 @@ export const useAppStore = create<AppState>((set, get) => ({
         }
       } else {
         // Outside Telegram WebApp: Enforce strict bot access
-        localStorage.removeItem('azurlize_jwt_token');
         delete axios.defaults.headers.common['Authorization'];
         set({ 
           token: null, 
@@ -160,7 +133,6 @@ export const useAppStore = create<AppState>((set, get) => ({
       const { token, user } = res.data;
 
       // Save token and defaults
-      localStorage.setItem('azurlize_jwt_token', token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
       set({
@@ -184,41 +156,7 @@ export const useAppStore = create<AppState>((set, get) => ({
     }
   },
 
-  connectTelegramManual: async (username, firstName, lastName) => {
-    try {
-      const res = await axios.post('/api/auth/telegram-manual', {
-        username,
-        firstName,
-        lastName
-      });
-      const { token, user } = res.data;
-
-      localStorage.setItem('azurlize_jwt_token', token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-      set({
-        token,
-        user,
-        alert: { message: `Berhasil terhubung sebagai @${username}`, type: 'success' }
-      });
-
-      // Retrieve full me profile
-      const profileRes = await axios.get('/api/me');
-      set({
-        user: profileRes.data.user,
-        application: profileRes.data.application
-      });
-    } catch (err: any) {
-      const errMsg = err.response?.data?.error || err.message || 'Gagal menghubungkan akun Telegram.';
-      set({
-        alert: { message: `Manual Auth Error: ${errMsg}`, type: 'error' }
-      });
-      throw err;
-    }
-  },
-
   logout: () => {
-    localStorage.removeItem('azurlize_jwt_token');
     delete axios.defaults.headers.common['Authorization'];
     set({
       user: null,

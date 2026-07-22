@@ -18,15 +18,7 @@ export interface ThemeContextProps {
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  // Try to load initial theme from localStorage
-  const [theme, setThemeState] = useState<ThemeMode>(() => {
-    try {
-      const saved = localStorage.getItem('azurlize_theme_mode') as ThemeMode;
-      return saved || 'dark';
-    } catch (e) {
-      return 'dark';
-    }
-  });
+  const [theme, setThemeState] = useState<ThemeMode>('dark');
 
   const { isDarkMode, setTheme: setStoreTheme } = useAppStore();
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('dark');
@@ -78,14 +70,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       const expectedMode: ThemeMode = isDarkMode ? 'dark' : 'light';
       if (expectedMode !== theme) {
         setThemeState(expectedMode);
-        localStorage.setItem('azurlize_theme_mode', expectedMode);
       }
     }
   }, [isDarkMode]);
 
   const setTheme = (newTheme: ThemeMode) => {
     setThemeState(newTheme);
-    localStorage.setItem('azurlize_theme_mode', newTheme);
   };
 
   const toggleTheme = () => {

@@ -16,7 +16,8 @@ export function TelegramConnect() {
   const tg = (window as any).Telegram?.WebApp;
   const tgUser = tg?.initDataUnsafe?.user;
 
-  const botUsername = import.meta.env.VITE_BOT_USERNAME || 'azurlize_recruitment_bot';
+  const appConfig = typeof window !== 'undefined' && (window as any).APP_CONFIG ? (window as any).APP_CONFIG : {};
+  const botUsername = appConfig.BOT_USERNAME || import.meta.env.VITE_BOT_USERNAME || 'azurlize_recruitment_bot';
   const botLink = `https://t.me/${botUsername}`;
 
   const copyDetails = () => {
